@@ -2,6 +2,10 @@ package com.example.test123
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +15,13 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
     // biến kiểm tra xem Toast đã dc hiện thị chưa
     private var showToast: Boolean = false
+
+    // Phương thức sẽ được gọi khi ấn vào nút ở file xml
+    // View là bắt buộc để nhìn dc sang file xml, ko cho view tham số thì xml sẽ ko thấy dc fun này
+    // bên xml add thêm android:onClick="clickButton"
+    fun clickButton(view: View){
+        Toast.makeText(this, "yes sir User", Toast.LENGTH_LONG).show()
+    }
 
     // phương thức onCreate - được khởi chạy khi app bắt đầu hoạt động hoặc sau khi gọi onPause/onStop
     // Khởi tạo các đối tượng UI trc khi hiện thị cho người dùng
@@ -41,7 +52,7 @@ class MainActivity : AppCompatActivity() {
          Error - lỗi xảy ra trong quá trình vận hành ứng dụng.
          Trong giao thức, chúng được đánh dấu bằng màu nâu đỏ để có thể nhận thấy ngay lập tức.
          */
-        Log.i("phương thức vòng đời", "onStart")
+        Log.i("phương thức vòng đời", "onCreate")
 
         // Check xem Bundle có bằng null hay ko
         // Vì lần đầu mở app nó sẽ là null, vì chưa dc khởi tạo
@@ -49,13 +60,48 @@ class MainActivity : AppCompatActivity() {
             showToast = savedInstanceState.getBoolean("SHOW_TOAST")
         }
 
-        // nếu showToast = false, mới hiện thị thông báo
+        // nếu showToast = false, mới hiển thị thông báo, chỉ hiển thị thông báo đúng lần đầu mở app
         if(!showToast){
             // Hiện thị thông báo ra màn hình
             Toast.makeText(this, "Hello User", Toast.LENGTH_LONG).show()
             showToast = true
         }
 
+        // Tạo đối tượng phần tử trong giao diện người dùng, giống querySelector trong javascript
+        // tìm phần tử trong giao diện dựa trên id, sau đó gán cho biến
+        val textView2: TextView = findViewById(R.id.textView2)
+        val textView: TextView = findViewById(R.id.textView)
+        // cách 2 kiếm theo id, ko khai báo kiểu biến
+        val imageView = findViewById<ImageView>(R.id.imageView)
+        val button = findViewById<Button>(R.id.button)
+
+        // Tương tác với các đối tượng trong giao diện mà ta kết nối ở trên
+
+        // Thay đổi giá trị text trong TextView
+        // có 2 cách
+        textView2.text = "new text in onCreate() method"
+        textView.setText("Hưng yêu Hy in onCreate()")
+
+        // lắng nghe sự kiện bấm nút, thực chất sự kiện click neo vào phần tử nào cũng dc, ko nhất thiết là button
+        var cnt: Int = 0
+        button.setOnClickListener {
+            cnt++
+            button.text = "$cnt"
+        }
+
+        // click vào TextView
+        textView2.setOnClickListener {
+            textView2.text = "Click here"
+        }
+
+        // sự kiện long click, nó sẽ hoạt động khi giữ phím (hold on button)
+        button.setOnLongClickListener {
+            textView2.text = "Long Click"
+            return@setOnLongClickListener true // bắt buộc phải return
+        }
+
+        // thay đổi source ảnh
+        imageView.setImageResource(R.drawable.ic_launcher_foreground)
     }
 
     // Phương thức onStart - chạy sau onCreate
