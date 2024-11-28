@@ -7,6 +7,11 @@ android {
     namespace = "com.example.test123"
     compileSdk = 34
 
+    // kết nối thư viện viewBinding
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.test123"
         minSdk = 23

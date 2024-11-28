@@ -3,6 +3,7 @@ package com.example.test123
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.test123.databinding.ActivityMainBinding
 
+//
 class MainActivity : AppCompatActivity() {
     // biến kiểm tra xem Toast đã dc hiện thị chưa
     private var showToast: Boolean = false
@@ -23,17 +26,24 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "yes sir User", Toast.LENGTH_LONG).show()
     }
 
+    // thuộc tính để sử dụng thư viện viewBinding
+    private lateinit var activityMainBinding: ActivityMainBinding
+
     // phương thức onCreate - được khởi chạy khi app bắt đầu hoạt động hoặc sau khi gọi onPause/onStop
     // Khởi tạo các đối tượng UI trc khi hiện thị cho người dùng
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // khai báo thuộc tính binding
+        activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
 
         // Bỏ qua các khung hệ thống của điện thoại
         enableEdgeToEdge()
 
         // Xác định giao diện người dùng của ứng dụng sẽ trông như thế nào
         // Chứa liên kết đến tệp đánh dấu activity_main.xml
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root) // y hệt khai báo như phía trên, nhưng dùng thư viện binding
 
         // Định nghĩa khung ứng dụng
         // Cần thiết để đảm bảo rằng các thành phần UI không được đặt bên ngoài màn hình
@@ -102,6 +112,37 @@ class MainActivity : AppCompatActivity() {
 
         // thay đổi source ảnh
         imageView.setImageResource(R.drawable.ic_launcher_foreground)
+
+        // Sử dụng đối tượng activityMainBinding, sử dụng viewBinding
+        Log.i("EDIT TEXT", activityMainBinding.editTextText.text.toString())
+        // thay đổi text trong EditText
+        activityMainBinding.editTextText.setText("")
+
+        // làm việc với Switch
+        activityMainBinding.switch1.setOnClickListener{
+            if(activityMainBinding.switch1.isChecked){
+                activityMainBinding.textView2.text = "ON"
+            }
+            else{
+                activityMainBinding.textView2.text = "OFF"
+            }
+        }
+
+        // làm việc với spinner (dropdown)
+        // tạo adapter, trong adapter sẽ chứa các lựa chọn cho spinner (dropdown)
+
+        val spinnerAdapter = ArrayAdapter(
+            this,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            listOf(
+                "Kotlin",
+                "JavaScript",
+                "TypeScript",
+                "Java"
+            )
+        )
+        // ném adapter(các lựa chọn) này vào spinner (dropdown)
+        activityMainBinding.spinner.adapter = spinnerAdapter
     }
 
     // Phương thức onStart - chạy sau onCreate
